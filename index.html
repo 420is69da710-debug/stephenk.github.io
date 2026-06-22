@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AuraStudioGames</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --void: #0A0A0F;
+      --deep: #12121A;
+      --panel: #1A1A26;
+      --border: #2A2A3A;
+      --violet: #7B2FFF;
+      --violet-glow: rgba(123, 47, 255, 0.25);
+      --cyan: #00F0FF;
+      --cyan-glow: rgba(0, 240, 255, 0.2);
+      --white: #E8E8F0;
+      --muted: #7A7A8C;
+      --font-display: 'Orbitron', sans-serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--void);
+      color: var(--white);
+      font-family: var(--font-body);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1.25rem 2.5rem;
+      background: rgba(10,10,15,0.8);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--cyan); }
+    .nav-links { display: flex; gap: 2rem; list-style: none; }
+    .nav-links a {
+      font-size: 0.8rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--cyan); }
+
+    /* ── HERO ── */
+    #hero {
+      position: relative;
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center;
+      padding: 6rem 2rem 4rem;
+      overflow: hidden;
+    }
+    #starfield {
+      position: absolute; inset: 0;
+      pointer-events: none;
+    }
+    .hero-eyebrow {
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1.5rem;
+      position: relative; z-index: 1;
+    }
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(2.8rem, 8vw, 6rem);
+      font-weight: 900;
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      position: relative; z-index: 1;
+      margin-bottom: 0.25rem;
+    }
+    .hero-title .aura { color: var(--white); }
+    .hero-title .studio {
+      color: transparent;
+      -webkit-text-stroke: 1.5px var(--violet);
+    }
+    .hero-title .games { color: var(--cyan); }
+    .hero-sub {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 420px;
+      line-height: 1.7;
+      margin: 1.5rem auto 2.5rem;
+      position: relative; z-index: 1;
+    }
+    .hero-cta {
+      display: inline-flex; gap: 1rem;
+      position: relative; z-index: 1;
+      flex-wrap: wrap; justify-content: center;
+    }
+    .btn {
+      display: inline-block;
+      padding: 0.75rem 1.75rem;
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 3px;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+    .btn-primary {
+      background: var(--violet);
+      color: #fff;
+      box-shadow: 0 0 24px var(--violet-glow);
+    }
+    .btn-primary:hover {
+      background: #9147ff;
+      box-shadow: 0 0 40px rgba(123,47,255,0.5);
+      transform: translateY(-2px);
+    }
+    .btn-ghost {
+      background: transparent;
+      color: var(--cyan);
+      border: 1px solid var(--cyan);
+    }
+    .btn-ghost:hover {
+      background: var(--cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    /* glow orbs */
+    .orb {
+      position: absolute; border-radius: 50%;
+      filter: blur(80px); pointer-events: none;
+    }
+    .orb-1 {
+      width: 500px; height: 500px;
+      background: var(--violet-glow);
+      top: -100px; left: -100px;
+    }
+    .orb-2 {
+      width: 400px; height: 400px;
+      background: var(--cyan-glow);
+      bottom: -80px; right: -60px;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 6rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+    .section-label {
+      font-family: var(--font-display);
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--violet);
+      margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 1.25rem;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--deep); }
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+    .about-text p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.8;
+      margin-bottom: 1rem;
+    }
+    .about-text p strong { color: var(--white); font-weight: 600; }
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.25rem;
+    }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 900;
+      color: var(--cyan);
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-top: 0.4rem;
+      letter-spacing: 0.05em;
+    }
+    .about-visual {
+      position: relative;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .about-badge {
+      width: 280px; height: 280px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      background: var(--panel);
+      position: relative;
+    }
+    .about-badge::before {
+      content: '';
+      position: absolute; inset: -2px;
+      border-radius: 50%;
+      background: conic-gradient(var(--violet), var(--cyan), var(--violet));
+      z-index: -1;
+      animation: spin 6s linear infinite;
+    }
+    .about-badge::after {
+      content: '';
+      position: absolute; inset: 0;
+      border-radius: 50%;
+      background: var(--panel);
+      z-index: -1;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .badge-icon { font-size: 3.5rem; margin-bottom: 0.5rem; }
+    .badge-name {
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      color: var(--white);
+    }
+    .badge-sub {
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+    }
+
+    /* ── SKILLS ── */
+    #skills { background: var(--void); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.25rem;
+      margin-top: 3rem;
+    }
+    .skill-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.5rem;
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .skill-card:hover {
+      border-color: var(--violet);
+      transform: translateY(-4px);
+    }
+    .skill-icon { font-size: 1.8rem; margin-bottom: 0.75rem; }
+    .skill-name {
+      font-family: var(--font-display);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--white);
+      margin-bottom: 0.4rem;
+    }
+    .skill-desc { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+
+    /* ── GAMES ── */
+    #games { background: var(--deep); }
+    .games-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+    .game-card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .game-card:hover {
+      border-color: var(--cyan);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 60px rgba(0,240,255,0.1);
+    }
+    .game-thumb {
+      height: 180px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+    .game-thumb-1 { background: linear-gradient(135deg, #1a0a2e, #2d1060); }
+    .game-thumb-2 { background: linear-gradient(135deg, #0a1a2e, #0d3060); }
+    .game-thumb-3 { background: linear-gradient(135deg, #0a2e1a, #0d6030); }
+    .game-tag {
+      position: absolute; top: 12px; right: 12px;
+      background: var(--violet);
+      color: #fff;
+      font-family: var(--font-display);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+      text-transform: uppercase;
+    }
+    .game-tag.published { background: #00a86b; }
+    .game-info { padding: 1.5rem; }
+    .game-name {
+      font-family: var(--font-display);
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .game-desc { font-size: 0.85rem; color: var(--muted); line-height: 1.65; margin-bottom: 1rem; }
+    .game-meta {
+      display: flex; gap: 0.75rem; flex-wrap: wrap;
+    }
+    .meta-pill {
+      font-size: 0.7rem;
+      color: var(--cyan);
+      background: var(--cyan-glow);
+      border: 1px solid rgba(0,240,255,0.2);
+      padding: 0.2rem 0.6rem;
+      border-radius: 20px;
+    }
+
+    /* ── CONTACT ── */
+    #contact { background: var(--void); }
+    .contact-inner {
+      max-width: 580px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .contact-inner .section-title { margin-bottom: 0.75rem; }
+    .contact-inner p {
+      color: var(--muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 2.5rem;
+    }
+    .contact-links {
+      display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;
+    }
+    .contact-link {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: border-color 0.2s, background 0.2s, transform 0.2s;
+    }
+    .contact-link:hover {
+      border-color: var(--violet);
+      background: var(--violet-glow);
+      transform: translateY(-3px);
+    }
+    .contact-link span { font-size: 1.1rem; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 2rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    footer strong { color: var(--violet); font-family: var(--font-display); font-size: 0.75rem; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { display: none; }
+      .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+      .about-visual { order: -1; }
+      .about-badge { width: 200px; height: 200px; }
+      .badge-icon { font-size: 2.5rem; }
+      section { padding: 4rem 1.5rem; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .about-badge::before { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#hero" class="nav-logo">AURA<span>STUDIO</span>GAMES</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#games">Games</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <canvas id="starfield"></canvas>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <p class="hero-eyebrow">Indie Game Development Studio</p>
+  <h1 class="hero-title">
+    <span class="aura">AURA</span><br>
+    <span class="studio">STUDIO</span><br>
+    <span class="games">GAMES</span>
+  </h1>
+  <p class="hero-sub">A small indie studio making games in Roblox. Started solo, learning as I go.</p>
+  <div class="hero-cta">
+    <a href="#games" class="btn btn-primary">View Games</a>
+    <a href="#contact" class="btn btn-ghost">Get In Touch</a>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="container">
+    <div class="about-grid">
+      <div class="about-text">
+        <p class="section-label">About</p>
+        <h2 class="section-title">Just me,<br>making games.</h2>
+        <p>AuraStudioGames is a solo project. I've been scripting in Roblox for a while, picked it up on my own, and eventually shipped a full game.</p>
+        <p>Still early — currently learning <strong>JavaScript and web development</strong> and figuring out where things go from here.</p>
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-num">1</div>
+            <div class="stat-label">Published Game</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">Solo</div>
+            <div class="stat-label">Developer</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">Lua</div>
+            <div class="stat-label">Primary Language</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Self-taught</div>
+          </div>
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-badge">
+          <div class="badge-icon">🎮</div>
+          <div class="badge-name">AURA STUDIO</div>
+          <div class="badge-sub">Est. 2024</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <p class="section-label">Skills</p>
+    <h2 class="section-title">What I build with</h2>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-icon">⚡</div>
+        <div class="skill-name">Lua Scripting</div>
+        <div class="skill-desc">My main language. Used it to build game logic, UI, and systems in Roblox Studio.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🏗️</div>
+        <div class="skill-name">Game Systems</div>
+        <div class="skill-desc">Combat, progression, inventory — getting different parts of a game to work together.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🎨</div>
+        <div class="skill-name">World Building</div>
+        <div class="skill-desc">Designing environments and spaces for players to move around in.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🐛</div>
+        <div class="skill-name">Debugging</div>
+        <div class="skill-desc">Tracking down what's broken and fixing it. A big part of working solo.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">🚀</div>
+        <div class="skill-name">Shipping</div>
+        <div class="skill-desc">Finishing and publishing a project, not just leaving it as a work in progress.</div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-icon">📐</div>
+        <div class="skill-name">Learning Fast</div>
+        <div class="skill-desc">Currently expanding into JavaScript, web development, and new platforms.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="container">
+    <p class="section-label">Games</p>
+    <h2 class="section-title">Projects</h2>
+    <div class="games-grid">
+      <div class="game-card">
+        <div class="game-thumb game-thumb-1">
+          🌌
+          <span class="game-tag published">Published</span>
+        </div>
+        <div class="game-info">
+          <div class="game-name">Your Game Title Here</div>
+          <div class="game-desc">A fully solo-built Roblox experience. Add your game's description here — what's the genre, what's the hook, what makes it worth playing?</div>
+          <div class="game-meta">
+            <span class="meta-pill">Roblox</span>
+            <span class="meta-pill">Lua</span>
+            <span class="meta-pill">Solo Dev</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-thumb game-thumb-2">
+          🔭
+          <span class="game-tag">In Dev</span>
+        </div>
+        <div class="game-info">
+          <div class="game-name">Next Project</div>
+          <div class="game-desc">Something new is in the works. Follow along to see what comes next from AuraStudioGames.</div>
+          <div class="game-meta">
+            <span class="meta-pill">TBA</span>
+            <span class="meta-pill">Coming Soon</span>
+          </div>
+        </div>
+      </div>
+      <div class="game-card">
+        <div class="game-thumb game-thumb-3">
+          🌐
+          <span class="game-tag">Learning</span>
+        </div>
+        <div class="game-info">
+          <div class="game-name">Web Projects</div>
+          <div class="game-desc">Expanding into JavaScript and web development. First web projects dropping soon.</div>
+          <div class="game-meta">
+            <span class="meta-pill">JavaScript</span>
+            <span class="meta-pill">Web</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-inner">
+      <p class="section-label">Contact</p>
+      <h2 class="section-title">Let's talk</h2>
+      <p>Open to collaborations, opportunities, and feedback. Whether you want to play the game or build something together — reach out.</p>
+      <div class="contact-links">
+        <a href="https://roblox.com" target="_blank" class="contact-link">
+          <span>🎮</span> Roblox Profile
+        </a>
+        <a href="https://github.com" target="_blank" class="contact-link">
+          <span>💻</span> GitHub
+        </a>
+        <a href="mailto:hello@aurastudiogames.com" class="contact-link">
+          <span>✉️</span> Email
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  Made by <strong>AURASTUDIOGAMES</strong>
+</footer>
+
+<script>
+  // Starfield
+  const canvas = document.getElementById('starfield');
+  const ctx = canvas.getContext('2d');
+  let stars = [];
+
+  function resize() {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+  }
+
+  function initStars() {
+    stars = [];
+    for (let i = 0; i < 160; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.2 + 0.2,
+        a: Math.random(),
+        speed: Math.random() * 0.003 + 0.001,
+        twinkleOffset: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    frame += 0.012;
+    stars.forEach(s => {
+      const alpha = 0.3 + 0.5 * Math.abs(Math.sin(frame * s.speed * 60 + s.twinkleOffset));
+      ctx.beginPath();
+      ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(200, 210, 255, ${alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  initStars();
+  draw();
+  window.addEventListener('resize', () => { resize(); initStars(); });
+
+  // Smooth active nav
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 120) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--cyan)' : '';
+    });
+  });
+</script>
+</body>
+</html>
